@@ -1,0 +1,18 @@
+# Python dependencies for src/calibration_experiment.py
+# Inferred from the script's imports. scikit-learn >= 1.6 is REQUIRED for
+# sklearn.frozen.FrozenEstimator (used to freeze the base estimator before
+# fitting CalibratedClassifierCV on the held-out calibration set).
+numpy
+pandas
+scipy
+scikit-learn>=1.6
+matplotlib
+
+# --- Exact versions this repo was verified runnable with (for archival
+#     reproducibility; pin these if you need bit-for-bit reruns) ---
+# python==3.14.5
+# numpy==2.4.6
+# pandas==3.0.3
+# scipy==1.17.1
+# scikit-learn==1.9.0
+# matplotlib==3.10.9

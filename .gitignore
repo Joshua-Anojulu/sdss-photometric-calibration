@@ -1,0 +1,25 @@
+# ---------------------------------------------------------------------------
+# Raw SDSS catalog -- DO NOT COMMIT (~67 MB, ~500k rows). Lives at data/sdss.csv;
+# this pattern (no leading slash) ignores it at any depth. Regenerate from
+# data/query.sql via SDSS CasJobs. The 500-row representative sample at
+# data/sdss_sample.csv IS committed for smoke-testing (different filename).
+# ---------------------------------------------------------------------------
+sdss.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+
+# Documents / build artifacts
+*.pdf
+
+# Ad-hoc run outputs
+results_demo/
