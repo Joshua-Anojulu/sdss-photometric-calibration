@@ -23,3 +23,6 @@ Thumbs.db
 
 # Ad-hoc run outputs
 results_demo/
+
+# subagent-driven-development scratch (ledger, briefs, diffs)
+.superpowers/
