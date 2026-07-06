@@ -1,0 +1,20 @@
+{
+  "LogReg": {
+    "C": 1.0
+  },
+  "RandomForest": {
+    "max_depth": 20,
+    "n_estimators": 300
+  },
+  "HistGB": {
+    "learning_rate": 0.1,
+    "max_iter": 200
+  },
+  "MLP": {
+    "alpha": 0.001,
+    "hidden_layer_sizes": [
+      128,
+      64
+    ]
+  }
+}
