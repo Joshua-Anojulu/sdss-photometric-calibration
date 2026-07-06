@@ -48,6 +48,34 @@ added #11.
 Findings below are retained for the record; the CSVs, figures, and `results/` were **not**
 regenerated (no numbers changed).
 
+## Status — v2 rigor upgrade (branch `rigor-v2`, 2026-07-06)
+
+A second work cycle upgraded the study to IEEE URTC submission quality. The pipeline was
+refactored into tested modules (`src/{data,metrics,recalibration,models,experiment,plots}.py`
++ a thin CLI) with a `tests/` suite, and the single-split protocol was replaced by:
+**k-fold-CV hyperparameter tuning** (train-split only) → **20 repeated stratified splits** →
+every metric reported as **mean ± 95% CI**. `results/` now holds aggregated
+`metrics_*_agg.csv` plus per-seed `raw_splits/` and `selected_hyperparameters.json`; the
+paper's Table I and text were updated to the seed-averaged numbers (verified against the new
+aggregates), and a per-class reliability figure (`fig1b`) was added.
+
+This resolves the previously-open items:
+- **#2 Uncertainty quantification — RESOLVED.** Every metric now carries a 95% CI over 20
+  splits (t-interval); the CIs are narrow (ECE half-widths ≤ 0.001), so the model-ranking and
+  "flat across magnitude" claims are statistically supported.
+- **#3 Hyperparameter tuning — RESOLVED (claim now genuinely true).** Models are selected by
+  five-fold-CV grid search on the training split; §II-C describes the grids and the selected
+  configuration. Reproduction remains bit-for-bit deterministic at a fixed seed.
+- **#6 Bin-count / per-class diagrams — RESOLVED.** ECE is reported at two bin counts (15 and
+  10); per-class one-vs-rest reliability diagrams are now produced (`fig1b`).
+- **#4 sample crash — RESOLVED** for the plotting path; note the 500-row sample is still too
+  small to run the full magnitude analysis end-to-end (documented in README).
+
+Still open / deliberately deferred: **Approach B** (additional models/methods, calibration vs.
+color/redshift, cross-survey transfer) — future work; and **#8** (temperature-on-log-probs
+footnote). The number-verification tables in the original review below refer to the **v1
+single-seed** CSVs; the v2 seed-averaged numbers differ by ≤ 0.002 and preserve every claim.
+
 ---
 
 ## Methodology checks
