@@ -29,17 +29,22 @@ falls on **completeness**, not purity.
 │   └── metrics_selection.csv       # QSO selection purity/completeness by magnitude
 ├── figures/
 │   ├── fig1_reliability_baseline.png
+│   ├── fig1b_perclass_reliability.png
 │   ├── fig2_ece_vs_magnitude.png
 │   ├── fig3_recalibration_transfer.png
 │   └── fig4_selection_quality.png
 ├── results/                        # canonical metrics CSVs the paper is verified against
-│   ├── metrics_baseline.csv
-│   ├── metrics_by_magnitude.csv
-│   └── metrics_selection.csv
+│   ├── metrics_baseline_agg.csv
+│   ├── metrics_by_magnitude_agg.csv
+│   ├── metrics_selection_agg.csv
+│   ├── raw_splits/                 # per-seed raw metrics underlying the aggregates above
+│   └── selected_hyperparameters.json
 ├── paper/
 │   ├── URTC_paper.docx             # final paper (authoritative)
 │   └── URTC_paper.md               # markdown draft source
 ├── requirements.txt
+├── requirements-lock.txt           # pinned versions of every dependency (archival reproducibility)
+├── reproduce.sh                    # one-command full rebuild: deps, tests, pipeline
 ├── REVIEW.md                       # code-vs-paper review and methodological notes
 ├── CLAUDE.md                       # orientation for AI coding agents
 └── .gitignore                      # excludes the raw sdss.csv (~67 MB) and build cruft
@@ -66,24 +71,48 @@ Run `data/query.sql` in [SDSS CasJobs](https://skyserver.sdss.org/casjobs/) with
 DR17 context (submit as a batch query), export the output table to CSV, and save it as
 `data/sdss.csv`.
 
-**2. Run the pipeline on the real catalog:**
+**2. Run the pipeline on the real catalog (repeated splits, seed-averaged):**
 
 ```bash
-python src/calibration_experiment.py --data data/sdss.csv --outdir results
+python src/calibration_experiment.py --data data/sdss.csv --seeds 20 --outdir results
 ```
 
-This writes `metrics_baseline.csv`, `metrics_by_magnitude.csv`, `metrics_selection.csv`
-and `fig1`–`fig4` into `results/`. The versions already committed here were produced this
-way; the paper's tables and text are verified against them (see `REVIEW.md`).
+Or, for a full rebuild in one command (installs dependencies, runs the test suite,
+checks that `data/sdss.csv` is present, then runs the command above):
+
+```bash
+./reproduce.sh
+```
+
+Each of the `--seeds` (default 20) repeated stratified splits is fit and scored
+independently, then every metric is aggregated to mean ± 95% CI. This writes to `results/`:
+
+- `metrics_baseline_agg.csv`, `metrics_by_magnitude_agg.csv`, `metrics_selection_agg.csv`
+  — aggregated (mean, 95% CI) metrics; these are the numbers the paper is verified against.
+- `raw_splits/baseline.csv`, `raw_splits/by_magnitude.csv`, `raw_splits/selection.csv`
+  — the per-seed raw metrics underlying the aggregates.
+- `selected_hyperparameters.json` — hyperparameters chosen by k-fold CV (real data only;
+  synthetic runs default to `--no-tune` unless `--tune` is passed explicitly).
+- `fig1_reliability_baseline.png`, `fig1b_perclass_reliability.png`,
+  `fig2_ece_vs_magnitude.png`, `fig3_recalibration_transfer.png`,
+  `fig4_selection_quality.png` — figures. `fig1`/`fig1b` (overall and per-class
+  reliability) are drawn from a single reference split (seed 0); the rest are drawn
+  from the aggregated, seed-averaged metrics.
+
+> **Determinism and reproducibility note:** results reproduce bit-for-bit deterministically
+> at a fixed seed (verified 2026-07-04). The committed numbers in `results/` are
+> seed-averaged over 20 splits with 95% confidence intervals — not a single run. Run
+> `./reproduce.sh` for a full rebuild (see `requirements-lock.txt` for the exact pinned
+> versions this was last verified against).
 
 **Smoke test without the full catalog** — run on synthetic data (randomly generated,
 enough rows to populate every magnitude bin; **not** scientific results):
 
 ```bash
-python src/calibration_experiment.py --synthetic --outdir results_demo
+python src/calibration_experiment.py --synthetic --seeds 3 --no-tune --outdir results_demo
 ```
 
-This exercises the whole pipeline (all metrics + `fig1`–`fig4`) and exits 0.
+This exercises the whole pipeline (all metrics + `fig1`/`fig1b`–`fig4`) and exits 0.
 
 > **Note:** `data/sdss_sample.csv` is provided to show the exact CSV schema the pipeline
 > expects and to check the data-loading + baseline path; it is **too small to run
