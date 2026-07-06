@@ -66,7 +66,7 @@ def _band(ax, g, ycol, color, label, marker="o-"):
     # capture the drawn line's color so a passed color=None (default cycle) still bands correctly
     line, = ax.plot(g["mag_bin"], g[f"{ycol}_mean"], marker, color=color, label=label)
     if f"{ycol}_lo" in g:
-        ax.fill_between(range(len(g)), g[f"{ycol}_lo"], g[f"{ycol}_hi"],
+        ax.fill_between(g["mag_bin"], g[f"{ycol}_lo"], g[f"{ycol}_hi"],
                         color=line.get_color(), alpha=0.18, linewidth=0)
 
 def plot_ece_vs_magnitude(agg_by_mag, outdir):
