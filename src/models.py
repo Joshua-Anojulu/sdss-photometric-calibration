@@ -1,4 +1,3 @@
-import numpy as np
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -36,7 +35,8 @@ _DEFAULTS = {"LogReg": {"C": 1.0},
              "MLP": {"hidden_layer_sizes": (64, 32), "alpha": 1e-4}}
 
 def build_models(params=None, seed=RANDOM_STATE):
-    params = params or _DEFAULTS
+    if params is None:
+        params = _DEFAULTS
     return {name: _base(name, params.get(name, _DEFAULTS[name]), seed)
             for name in _DEFAULTS}
 

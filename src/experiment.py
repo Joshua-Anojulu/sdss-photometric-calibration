@@ -18,11 +18,12 @@ def run_one_split(X, y, r, seed, params, n_bins=15, bright_faint_split=19.0,
     Xcal, ycal, rcal = X[idx_cal], y[idx_cal], r[idx_cal]
     Xte, yte, rte = X[idx_te], y[idx_te], r[idx_te]
 
-    fitted, baseline_rows = {}, []
+    fitted, probs_te, baseline_rows = {}, {}, []
     for name, model in build_models(params, seed=seed).items():
         model.fit(Xtr, ytr)
         fitted[name] = model
         p = model.predict_proba(Xte)
+        probs_te[name] = p  # reused as the uncalibrated ("raw") condition below
         _, pred = top_label(p)
         baseline_rows.append({
             "model": name, "accuracy": (pred == yte).mean(),
@@ -37,7 +38,7 @@ def run_one_split(X, y, r, seed, params, n_bins=15, bright_faint_split=19.0,
     bright_cal = rcal < bright_faint_split
     conds, by_mag_rows = {}, []
     for name, model in fitted.items():
-        cond = {"raw": recalibrate(model, Xcal, ycal, Xte, "none")}
+        cond = {"raw": probs_te[name]}
         for meth in ["platt", "isotonic", "temperature"]:
             cond[f"rep_{meth}"] = recalibrate(model, Xcal, ycal, Xte, meth)
             cond[f"bright_{meth}"] = recalibrate(model, Xcal[bright_cal],

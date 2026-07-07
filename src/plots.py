@@ -1,11 +1,9 @@
 import os
-import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from src.metrics import reliability_curve, ece_score, per_class_reliability
-from src.experiment import BIN_LABELS
 
 # publication-quality figure defaults (clean, legible at column width)
 plt.rcParams.update({
@@ -45,7 +43,8 @@ def plot_reliability_grid(fitted, Xte, yte, outdir, n_bins):
 
 def plot_per_class_reliability(fitted, Xte, yte, outdir, n_bins=10):
     classes = ["STAR", "GALAXY", "QSO"]
-    fig, axes = plt.subplots(len(fitted), 3, figsize=(9, 3 * len(fitted)))
+    fig, axes = plt.subplots(len(fitted), 3, figsize=(9, 3 * len(fitted)),
+                             squeeze=False)  # keep 2-D indexing even for one model
     for i, (name, model) in enumerate(fitted.items()):
         p = model.predict_proba(Xte)
         for k in range(3):

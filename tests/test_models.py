@@ -1,4 +1,3 @@
-import numpy as np
 from src import models, data
 
 def test_build_models_default_keys():

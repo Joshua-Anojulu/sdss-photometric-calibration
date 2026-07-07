@@ -7,7 +7,6 @@ Real runs use k-fold-CV hyperparameter selection and R repeated stratified split
 every metric is aggregated to mean + 95% CI. --synthetic uses random data (NOT results).
 """
 import argparse, os, json, sys
-import numpy as np
 
 # allow running this file directly (`python src/calibration_experiment.py ...`), where
 # Python only puts this file's own directory on sys.path, not the repo root that "src"
@@ -27,6 +26,8 @@ def main():
     ap.add_argument("--tune", dest="tune", action="store_true", default=None)
     ap.add_argument("--no-tune", dest="tune", action="store_false")
     args = ap.parse_args()
+    if args.seeds < 1:
+        ap.error("--seeds must be >= 1")
     os.makedirs(args.outdir, exist_ok=True)
     os.makedirs(os.path.join(args.outdir, "raw_splits"), exist_ok=True)
 

@@ -99,11 +99,11 @@ independently, then every metric is aggregated to mean ± 95% CI. This writes to
   reliability) are drawn from a single reference split (seed 0); the rest are drawn
   from the aggregated, seed-averaged metrics.
 
-> **Determinism and reproducibility note:** results reproduce bit-for-bit deterministically
-> at a fixed seed (verified 2026-07-04). The committed numbers in `results/` are
-> seed-averaged over 20 splits with 95% confidence intervals — not a single run. Run
-> `./reproduce.sh` for a full rebuild (see `requirements-lock.txt` for the exact pinned
-> versions this was last verified against).
+> **Determinism and reproducibility note:** every stage is explicitly seeded, so a run at a
+> fixed seed is deterministic (the pre-refactor single-seed pipeline was verified to
+> reproduce bit-for-bit on 2026-07-04). The committed numbers in `results/` are seed-averaged
+> over 20 splits with 95% confidence intervals — not a single run. Run `./reproduce.sh` for a
+> full rebuild (see `requirements-lock.txt` for the exact pinned versions used).
 
 **Smoke test without the full catalog** — run on synthetic data (randomly generated,
 enough rows to populate every magnitude bin; **not** scientific results):
@@ -129,8 +129,9 @@ This exercises the whole pipeline (all metrics + `fig1`/`fig1b`–`fig4`) and ex
 - **Three-way split by object, stratified by class (60/20/20):** models are fit on
   **train**, any recalibration map is fit **only** on **calibration**, and every reported
   metric is computed on the held-out **test** set — no leakage.
-- **Metrics:** top-label ECE (uniform and equal-mass bins), classwise (one-vs-rest) ECE,
-  MCE, multiclass Brier, NLL, and reliability diagrams.
+- **Metrics:** top-label ECE (uniform and equal-mass bins, at 15 and 10 bin counts),
+  classwise (one-vs-rest) ECE, MCE, multiclass Brier, NLL, and reliability diagrams
+  (overall and per-class).
 - **Recalibration:** Platt (sigmoid), isotonic, and temperature scaling, each fit on the
   full calibration set and on a bright-only subset to measure transfer to faint bins.
 - **Selection experiment:** promised vs. achieved purity and completeness for a

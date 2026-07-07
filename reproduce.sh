@@ -9,4 +9,5 @@ if [ ! -f data/sdss.csv ]; then
   exit 1
 fi
 python src/calibration_experiment.py --data data/sdss.csv --seeds 20 --outdir results
+cp results/fig*.png figures/   # keep the paper's figure directory in sync
 echo "Done. See results/ and figures/."

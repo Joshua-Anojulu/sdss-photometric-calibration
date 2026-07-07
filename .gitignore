@@ -26,3 +26,6 @@ results_demo/
 
 # subagent-driven-development scratch (ledger, briefs, diffs)
 .superpowers/
+
+# internal process docs (kept local, not published)
+docs/

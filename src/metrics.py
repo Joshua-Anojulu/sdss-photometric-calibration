@@ -20,7 +20,7 @@ def ece_score(probs, y, n_bins=15, strategy="uniform"):
         ece += (msk.sum() / N) * abs(correct[msk].mean() - conf[msk].mean())
     return ece
 
-def classwise_ece(probs, y, n_bins=10):
+def classwise_ece(probs, y, n_bins=15):
     """Mean one-vs-rest calibration error over classes (controls for class mix)."""
     edges = np.linspace(0.0, 1.0, n_bins + 1)
     edges[-1] += 1e-9  # include p == 1.0
