@@ -19,14 +19,13 @@ falls on **completeness**, not purity.
 
 ```
 .
-├── src/
-│   └── calibration_experiment.py   # end-to-end pipeline (models, metrics, figures)
+├── src/                            # pipeline as focused modules
+│   ├── data.py  metrics.py  recalibration.py  models.py  experiment.py  plots.py
+│   └── calibration_experiment.py   # thin CLI orchestrator
+├── tests/                          # pytest suite (metrics, splits, models, experiment, smoke)
 ├── data/
 │   ├── query.sql                   # CasJobs SQL to regenerate the raw SDSS catalog
-│   ├── sdss_sample.csv             # 500-row representative sample (raw catalog is gitignored)
-│   ├── metrics_baseline.csv        # per-model calibration/accuracy on the test set
-│   ├── metrics_by_magnitude.csv    # per-model ECE per magnitude bin & recalibration condition
-│   └── metrics_selection.csv       # QSO selection purity/completeness by magnitude
+│   └── sdss_sample.csv             # 500-row representative sample (raw catalog is gitignored)
 ├── figures/
 │   ├── fig1_reliability_baseline.png
 │   ├── fig1b_perclass_reliability.png

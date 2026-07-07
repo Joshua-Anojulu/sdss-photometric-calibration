@@ -36,7 +36,7 @@ Sources are partitioned by object into three disjoint sets, a training set, a ca
 
 ### C. Classifiers
 
-Four classifiers spanning distinct model families and known calibration behaviors are compared: multinomial logistic regression, a random forest, a gradient-boosted decision-tree ensemble, and a multilayer perceptron (MLP). Each model's hyperparameters are selected by five-fold cross-validated grid search (minimizing negative log-likelihood) on the training split - the random forest over tree count and maximum depth, the gradient-boosted ensemble over learning rate and iteration count, the MLP over hidden-layer width and L2 penalty, and logistic regression over its inverse regularization strength - and the selected configuration (here a depth-limited 300-tree forest and a 128-64 MLP) is held fixed across all repeated splits. Each model emits a class-probability vector (via predict_proba for the tree- and regression-based models and a softmax output layer for the MLP), and the predicted class is the argmax of that vector.
+Four classifiers spanning distinct model families and known calibration behaviors are compared: multinomial logistic regression, a random forest, a gradient-boosted decision-tree ensemble, and a multilayer perceptron (MLP). Each model's hyperparameters are selected by five-fold cross-validated grid search (minimizing negative log-likelihood) on the training split - the random forest over tree count and maximum depth, the gradient-boosted ensemble over learning rate and iteration count, the MLP over hidden-layer width and L2 penalty, and logistic regression over its inverse regularization strength - and the selected configuration (here a depth-limited 300-tree forest and a 128-64 MLP) is held fixed across all repeated splits. Because selection uses a single reference split, the reported confidence intervals reflect split-to-split variability rather than hyperparameter-selection uncertainty. Each model emits a class-probability vector (via predict_proba for the tree- and regression-based models and a softmax output layer for the MLP), and the predicted class is the argmax of that vector.
 
 ### D. Calibration Metrics
 
@@ -74,14 +74,14 @@ On the held-out test set (99,999 objects), the random forest, gradient-boosted t
 
 | Model | Acc. | ECE | MCE | Brier | NLL |
 |---|---|---|---|---|---|
-| Logistic regression | 0.811 | 0.077 | 0.161 | 0.311 | 0.553 |
+| Logistic regression | 0.810 | 0.077 | 0.161 | 0.311 | 0.553 |
 | Random forest | 0.925 | 0.005 | 0.045 | 0.113 | 0.210 |
 | HistGB | 0.924 | 0.003 | 0.056 | 0.114 | 0.211 |
 | MLP | 0.926 | 0.004 | 0.062 | 0.112 | 0.207 |
 
 *Table I. Accuracy and calibration on the held-out test set. Values are means over 20 stratified splits; 95% confidence intervals are narrow (ECE half-widths ≤ 0.001).*
 
-*Fig. 1. Reliability diagrams on the held-out test set. The three strong models track the diagonal closely (ECE 0.003 to 0.007); logistic regression is visibly miscalibrated.*
+*Fig. 1. Reliability diagrams on the held-out test set. The three strong models track the diagonal closely (ECE 0.003 to 0.005); logistic regression is visibly miscalibrated.*
 
 ### B. Calibration as a Function of Magnitude
 
@@ -93,13 +93,13 @@ To separate this from the strongly varying class mix across bins, classwise cali
 
 ### C. Recalibration Transfer
 
-Because the strong models are already well calibrated, recalibration offers little to gain and carries a real risk of harm. Platt scaling degrades calibration even when fit on a representative set (random-forest ECE rises from 0.005 to ≈0.030, MLP from 0.004 to ≈0.031), and fitting it on bright sources and applying it to the faintest bin is worse still, ECE reaches 0.063 for the random forest and 0.062 for the MLP. Isotonic regression shows a milder version of the same pattern. Temperature scaling is the most transfer-robust: a bright-fit temperature leaves faint-bin ECE near its uncalibrated value (random forest 0.018, MLP 0.007). The transfer result is therefore the inverse of the one anticipated, the danger is not that recalibration fails to fix a faint-end problem, but that recalibration, and bright-fit Platt scaling in particular, introduces one, with the severity depending strongly on the method (Fig. 3).
+Because the strong models are already well calibrated, recalibration offers little to gain and carries a real risk of harm. Platt scaling degrades calibration even when fit on a representative set (random-forest ECE rises from 0.005 to ≈0.030, MLP from 0.004 to ≈0.031), and fitting it on bright sources and applying it to the faintest bin is worse still, ECE reaches 0.063 for the random forest and 0.062 for the MLP. Isotonic regression shows a milder version of the same pattern. Temperature scaling is the most transfer-robust: a bright-fit temperature leaves faint-bin ECE near its uncalibrated value (random forest 0.017, MLP 0.007). The transfer result is therefore the inverse of the one anticipated, the danger is not that recalibration fails to fix a faint-end problem, but that recalibration, and bright-fit Platt scaling in particular, introduces one, with the severity depending strongly on the method (Fig. 3).
 
 *Fig. 3. Recalibration transfer for the random forest. A Platt map fit on bright sources degrades sharply at the faint end; temperature scaling transfers safely, staying near the uncalibrated baseline.*
 
 ### D. Decision-Relevant Selection Quality
 
-Figure 4 recasts these calibration differences as the quality of a quasar sample selected at P(QSO) ≥ 0.9. For the well-calibrated models the achieved purity of the selected sample matches the purity its probabilities promise at every magnitude: the random forest's faint-bin sample (r in [20,22)) is 96.3% pure against a promised 96.4%, and HistGB and the MLP agree with their promised purities to within about one percentage point likewise. The magnitude dependence appears instead in completeness, which falls toward faint sources, from ≈0.77 at r in [18,19) to ≈0.52 at r in [20,22) for the random forest, and similarly for the other strong models, because fewer faint quasars clear the 0.9 threshold. Logistic regression is the cautionary case: at the faint end it promises 92% purity but delivers only 77%, with completeness below 0.09, precisely the failure mode calibration is meant to prevent. For the strong models, recalibration changes these selections only marginally (a bright-fit temperature trades a fraction of a percentage point of purity for slightly higher completeness), consistent with the base probabilities already being trustworthy.
+Figure 4 recasts these calibration differences as the quality of a quasar sample selected at P(QSO) ≥ 0.9. For the well-calibrated models the achieved purity of the selected sample matches the purity its probabilities promise at every magnitude: the random forest's faint-bin sample (r in [20,22)) is 96.3% pure against a promised 96.3%, and HistGB and the MLP agree with their promised purities to within about one percentage point likewise. The magnitude dependence appears instead in completeness, which falls toward faint sources, from ≈0.77 at r in [18,19) to ≈0.52 at r in [20,22) for the random forest, and similarly for the other strong models, because fewer faint quasars clear the 0.9 threshold. Logistic regression is the cautionary case: at the faint end it promises 92% purity but delivers only 77%, with completeness below 0.09, precisely the failure mode calibration is meant to prevent. For the strong models, recalibration changes these selections only marginally (a bright-fit temperature trades a fraction of a percentage point of purity for slightly higher completeness), consistent with the base probabilities already being trustworthy.
 
 *Fig. 4. Quasar selection quality at P(QSO) ≥ 0.9 for the random forest. Achieved purity tracks the promised purity across magnitude; completeness falls toward faint sources.*
 

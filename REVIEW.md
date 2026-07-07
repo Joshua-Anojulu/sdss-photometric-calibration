@@ -80,6 +80,12 @@ single-seed** CSVs; the v2 seed-averaged numbers differ by ≤ 0.002 and preserv
 
 ## Methodology checks
 
+> **Note (v2):** the file/line anchors and per-metric numbers in the checks below reference the
+> **v1 monolithic `src/calibration_experiment.py`** (pre-refactor) and the v1 single-seed CSVs.
+> The logic now lives in `src/{data,metrics,recalibration,models,experiment}.py`; the leakage
+> separation, ECE/classwise-ECE, recalibration-transfer, and selection definitions are unchanged
+> (see the v2 status block above and `experiment.run_one_split`). Retained for the audit trail.
+
 ### Three-way split, no leakage — PASS
 `main()` (src/calibration_experiment.py:335–341) splits the row index into
 train/calibration/test = **60/20/20, stratified by class** (`train_test_split` with
