@@ -39,8 +39,9 @@ falls on **completeness**, not purity.
 │   ├── raw_splits/                 # per-seed raw metrics underlying the aggregates above
 │   └── selected_hyperparameters.json
 ├── paper/
-│   ├── URTC_paper.docx             # final paper (authoritative)
-│   └── URTC_paper.md               # markdown draft source
+│   ├── URTC_paper.tex              # IEEE conference (IEEEtran) source — compile on Overleaf
+│   ├── URTC_paper.docx             # final paper (authoritative prose)
+│   └── URTC_paper.md               # markdown mirror of the docx
 ├── requirements.txt
 ├── requirements-lock.txt           # pinned versions of every dependency (archival reproducibility)
 ├── reproduce.sh                    # one-command full rebuild: deps, tests, pipeline
