@@ -21,7 +21,11 @@ with hyperparameters chosen by k-fold-CV grid search on the training split.
 - `data/` — `query.sql` (CasJobs) and `sdss_sample.csv` (500 rows). The raw `sdss.csv` is gitignored.
 - `results/` — the **canonical** aggregated metrics (`metrics_*_agg.csv`, mean + 95% CI) the paper
   is verified against, plus per-seed `raw_splits/` and `selected_hyperparameters.json`.
-- `figures/` — the five figures in the paper (`fig1`, `fig1b` per-class, `fig2`–`fig4`).
+- `figures/` — the five figures `plots.py` produces. **Four appear in the paper** (`fig1`,
+  `fig2`–`fig4`); `fig1b` (per-class reliability) is still generated but was **cut from the
+  paper on 2026-07-31** to meet the URTC 5-page limit — it was the one float that pushed the
+  build to 6–7 pages at every width. Its content survives numerically in §III-B (classwise
+  ECE 0.005→0.004, per-class terms < 0.011). Do not re-add it without re-checking page count.
 - `paper/` — `URTC_paper.docx` (authoritative final) and `URTC_paper.md` (markdown regenerated from it).
 
 ## Hard constraints — do not violate
@@ -34,9 +38,18 @@ with hyperparameters chosen by k-fold-CV grid search on the training split.
 3. **No leakage across the split.** Models fit on **train** only; hyperparameters selected by CV
    on **train** only; recalibration maps fit on **calibration** only; all metrics on **test**
    only (see `experiment.run_one_split`). Breaking this separation invalidates every calibration number.
-4. **The paper is authoritative in `paper/URTC_paper.docx`.** `URTC_paper.md` was regenerated
-   from that docx and now matches it; keep them in sync if you edit either. If you regenerate
-   numbers, reconcile against the docx and `results/`.
+4. **The paper's current text lives in `URTC_paper.md` + `URTC_paper.tex` (in sync as of
+   2026-07-31); `paper/URTC_paper.docx` is STALE.** As of 2026-07-31 both gained a Richards
+   et al. 2012 citation (ref [13], the calibrated-probabilistic-catalog forerunner) positioned
+   in the intro, de-hyped abstract/contribution wording (empirical, not methodological; claims
+   scoped to SDSS DR17 and this target-selected sample), and lost the `fig1b` figure block for
+   the page limit. The `.tex` compiles to **exactly 5 pages** — verify page count after any
+   text or figure addition. The md/tex were redrafted for style and
+   gained two methods caveats (temperature scaling on pseudo-logits; one-vs-rest renormalization
+   in CalibratedClassifierCV) and an honest per-split-consistency sentence in III-A replacing
+   "statistically resolved"; all numbers are unchanged and remain verified against `results/`.
+   The docx must be reconciled to the md before submission; after that, docx resumes as the
+   authoritative final. If you regenerate numbers, reconcile against `results/`.
 
 ## Reproducing
 

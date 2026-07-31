@@ -27,5 +27,8 @@ results_demo/
 # subagent-driven-development scratch (ledger, briefs, diffs)
 .superpowers/
 
+# oh-my-claudecode operational state (notepad, plans, logs, handoffs) -- at any depth
+.omc/
+
 # internal process docs (kept local, not published)
 docs/

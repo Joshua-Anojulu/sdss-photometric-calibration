@@ -8,12 +8,12 @@ across source magnitude, and whether post-hoc recalibration fit on bright source
 transfers to faint ones.
 
 **Headline findings.** The random-forest, gradient-boosted, and MLP classifiers are
-well calibrated (ECE 0.003–0.007) and stay so across the full magnitude range;
-calibration tracks model capability (only logistic regression is badly miscalibrated,
-ECE 0.076). Recalibration fit on bright sources transfers poorly to faint ones
+well calibrated (ECE 0.003–0.005) and stay so across the full magnitude range;
+calibration tracks model capability (only logistic regression is miscalibrated,
+ECE 0.077). Recalibration fit on bright sources transfers poorly to faint ones
 (worst for Platt scaling; temperature scaling is safest). For a P(QSO) ≥ 0.9 quasar
 sample, purity matches the promised probability at every magnitude; the faint-end cost
-falls on **completeness**, not purity.
+falls on **completeness**.
 
 ## Repository layout
 
@@ -39,9 +39,9 @@ falls on **completeness**, not purity.
 │   ├── raw_splits/                 # per-seed raw metrics underlying the aggregates above
 │   └── selected_hyperparameters.json
 ├── paper/
-│   ├── URTC_paper.tex              # IEEE conference (IEEEtran) source — compile on Overleaf
-│   ├── URTC_paper.docx             # final paper (authoritative prose)
-│   └── URTC_paper.md               # markdown mirror of the docx
+│   ├── URTC_paper.tex              # CURRENT paper — IEEEtran source, compiles to exactly 5 pages
+│   ├── URTC_paper.md               # CURRENT paper — markdown, kept in sync with the .tex
+│   └── URTC_paper.docx             # STALE — predates the 2026-07-31 revision, reconcile before use
 ├── requirements.txt
 ├── requirements-lock.txt           # pinned versions of every dependency (archival reproducibility)
 ├── reproduce.sh                    # one-command full rebuild: deps, tests, pipeline
@@ -97,7 +97,9 @@ independently, then every metric is aggregated to mean ± 95% CI. This writes to
   `fig2_ece_vs_magnitude.png`, `fig3_recalibration_transfer.png`,
   `fig4_selection_quality.png` — figures. `fig1`/`fig1b` (overall and per-class
   reliability) are drawn from a single reference split (seed 0); the rest are drawn
-  from the aggregated, seed-averaged metrics.
+  from the aggregated, seed-averaged metrics. Note that **`fig1b` is produced by the
+  pipeline but does not appear in the paper** — it was cut on 2026-07-31 to meet the
+  URTC 5-page limit; its content is reported numerically in §III-B instead.
 
 > **Determinism and reproducibility note:** every stage is explicitly seeded, so a run at a
 > fixed seed is deterministic (the pre-refactor single-seed pipeline was verified to
