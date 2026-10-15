@@ -1,11 +1,11 @@
 # Calibration Robustness of Photometric Star/Galaxy/Quasar Classifiers Under Magnitude Shift
 
-Code, data samples, figures, and paper for an IEEE URTC study of probability
+Code, data samples, figures, and manuscript for a study of probability
 **calibration** in photometric star / galaxy / quasar classification on SDSS DR17
 (~500k spectroscopically-confirmed sources). The study measures whether four common
 classifiers produce trustworthy class probabilities, how that calibration behaves
 across source magnitude, and whether post-hoc recalibration fit on bright sources
-transfers to faint ones.
+transfers to faint ones. The manuscript is unpublished.
 
 **Headline findings.** The random-forest, gradient-boosted, and MLP classifiers are
 well calibrated (ECE 0.003–0.005) and stay so across the full magnitude range;
@@ -98,8 +98,8 @@ independently, then every metric is aggregated to mean ± 95% CI. This writes to
   `fig4_selection_quality.png` — figures. `fig1`/`fig1b` (overall and per-class
   reliability) are drawn from a single reference split (seed 0); the rest are drawn
   from the aggregated, seed-averaged metrics. Note that **`fig1b` is produced by the
-  pipeline but does not appear in the paper** — it was cut on 2026-07-31 to meet the
-  URTC 5-page limit; its content is reported numerically in §III-B instead.
+  pipeline but does not appear in the paper** — it was cut on 2026-07-31 to meet a
+  5-page limit; its content is reported numerically in §III-B instead.
 
 > **Determinism and reproducibility note:** every stage is explicitly seeded, so a run at a
 > fixed seed is deterministic (the pre-refactor single-seed pipeline was verified to
@@ -141,6 +141,10 @@ This exercises the whole pipeline (all metrics + `fig1`/`fig1b`–`fig4`) and ex
 
 ## Citation
 
-Anojulu, J. *Calibration Robustness of Photometric Star, Galaxy, and Quasar Classifiers
-Under Magnitude Shift.* IEEE MIT Undergraduate Research Technology Conference (URTC).
-See `paper/URTC_paper.docx`.
+Anojulu, J., and Puttagunta, V. (2026). *Calibration Robustness of Photometric Star, Galaxy,
+and Quasar Classifiers Under Magnitude Shift.* Unpublished manuscript. See `paper/URTC_paper.md`
+(the file names keep the conference template they were first formatted for).
+
+## License
+
+MIT. See [`LICENSE`](LICENSE).
